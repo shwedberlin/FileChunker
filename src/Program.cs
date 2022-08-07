@@ -27,9 +27,6 @@ var serviceProvider = new ServiceCollection()
 	})
 	.BuildServiceProvider();
 
-
-var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-
 try
 {
 	var app = serviceProvider.GetService<App>();
@@ -42,7 +39,9 @@ try
 }
 catch (Exception e)
 {
-	logger.LogError(e, e.Message);
+	Console.WriteLine(e.Message);
+	Console.WriteLine(e.StackTrace);
+	Console.ReadLine();
 }
 
 

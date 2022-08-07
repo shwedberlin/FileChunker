@@ -69,11 +69,12 @@ public class App
 	{
 		var buffer = new byte[chunkSize];
 		var readBytes = 0;
+		long chunkOffset = (long)chunkNr * chunkSize;
 		//TODO: check if lock needed
 		lock (_threadLock)
 		{
 			// Set the stream position to the beginning of the file.
-			fileStream.Seek(chunkNr * chunkSize, SeekOrigin.Begin);
+			fileStream.Seek(chunkOffset, SeekOrigin.Begin);
 			readBytes = fileStream.Read(buffer, 0, chunkSize);
 		}
 
@@ -91,9 +92,9 @@ public class App
 
 		// Convert byte array to a string
 		StringBuilder builder = new StringBuilder();
-		for (int i = 0; i < bytes.Length; i++)
+		foreach (var singleByte in bytes)
 		{
-			builder.Append(bytes[i].ToString("x2"));
+			builder.Append(singleByte.ToString("x2"));
 		}
 		return builder.ToString();
 	}
