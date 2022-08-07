@@ -1,0 +1,8 @@
+{
+  "profiles": {
+		"FileChunker": {
+			"commandName": "Project",
+			"commandLineArgs": "AppSettings:FilePath=C:\\temp\\test.txt AppSettings:ChunkSize=4096"
+		}
+  }
+}
