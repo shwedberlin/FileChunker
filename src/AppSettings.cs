@@ -2,7 +2,6 @@
 
 public class AppSettings
 {
-	//TODO: make non nullable
-	public string? FilePath { get; set; }
-	public int? ChunkSize { get; set; }
+	public string FilePath { get; set; } = String.Empty;
+	public int ChunkSize { get; set; } = -1;
 }

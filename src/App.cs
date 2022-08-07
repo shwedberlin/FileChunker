@@ -36,7 +36,7 @@ public class App
 
 	private void CheckOptions()
 	{
-		if (_appSettings.ChunkSize == null || string.IsNullOrEmpty(_appSettings.FilePath))
+		if (_appSettings.ChunkSize <= 0 || string.IsNullOrEmpty(_appSettings.FilePath))
 			throw new ArgumentException($"Please define both arguments: {nameof(_appSettings.FilePath)} and {nameof(_appSettings.ChunkSize)}");
 
 		//TODO: check if file exists and chunk size is: 0 < chunkSize < fileSize
@@ -45,8 +45,10 @@ public class App
 	private void ChunkFile(string filePath)
 	{
 		FileInfo fi = new FileInfo(_appSettings.FilePath);
-		var fileSize = fi.Length;
-		var chunkCount = fileSize / _appSettings.ChunkSize;
+		long fileSize = fi.Length;
+		long chunkCount = fileSize / _appSettings.ChunkSize;
+		if (chunkCount * _appSettings.ChunkSize < fileSize)
+			chunkCount++;
 
 		using var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
@@ -57,7 +59,6 @@ public class App
 
 		Parallel.For(0, (int)chunkCount, options, index =>
 		{
-			//TODO: last chunk could be smaller as chunkSize
 			var chunkData = ReadChunk(fs, index, (int)_appSettings.ChunkSize);
 			var sha256 = ComputeSha256Hash(chunkData);
 			Console.WriteLine($"{index}: {sha256}. (thread: {Thread.CurrentThread.ManagedThreadId})");
@@ -67,15 +68,17 @@ public class App
 	private byte[] ReadChunk(FileStream fileStream, int chunkNr, int chunkSize)
 	{
 		var buffer = new byte[chunkSize];
+		var readBytes = 0;
 		//TODO: check if lock needed
 		lock (_threadLock)
 		{
 			// Set the stream position to the beginning of the file.
 			fileStream.Seek(chunkNr * chunkSize, SeekOrigin.Begin);
-			var readBytes = fileStream.Read(buffer, 0, chunkSize);
+			readBytes = fileStream.Read(buffer, 0, chunkSize);
 		}
 
-		return buffer;
+		//for last chunk
+		return buffer.Take(readBytes).ToArray();
 	}
 
 	private static string ComputeSha256Hash(byte[] rawData)
