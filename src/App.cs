@@ -32,14 +32,17 @@ public class App
 
 	private void CheckOptions()
 	{
-		if (_appSettings.ChunkSize <= 0 || string.IsNullOrEmpty(_appSettings.FilePath))
+		if (_appSettings.ChunkSize < 0 || string.IsNullOrEmpty(_appSettings.FilePath))
 			throw new ArgumentException($"Please define both arguments: {nameof(_appSettings.FilePath)} and {nameof(_appSettings.ChunkSize)}");
 
-		if(!File.Exists(_appSettings.FilePath))
+		if (_appSettings.ChunkSize == 0)
+			throw new ArgumentException($"Please define positive {nameof(_appSettings.ChunkSize)}");
+
+		if (!File.Exists(_appSettings.FilePath))
 			throw new ArgumentException($"File {nameof(_appSettings.FilePath)} not exists");
 
 		var fileSize = new FileInfo(_appSettings.FilePath).Length;
 		if (_appSettings.ChunkSize > fileSize)
-			throw new ArgumentException($"File {fileSize/1024}kb, Chunk: {_appSettings.ChunkSize/1024}kb");
+			throw new ArgumentException($"Please define {nameof(_appSettings.ChunkSize)} less than file size. File {fileSize/1024}kb, Chunk: {_appSettings.ChunkSize/1024}kb");
 	}
 }
