@@ -2,7 +2,7 @@
   "profiles": {
 		"FileChunker": {
 			"commandName": "Project",
-			"commandLineArgs": "AppSettings:FilePath=C:\\temp\\test.txt AppSettings:ChunkSize=4096"
+			"commandLineArgs": "AppSettings:FilePath=C:\\temp\\test.mdf AppSettings:ChunkSize=100000"
 		}
   }
 }
