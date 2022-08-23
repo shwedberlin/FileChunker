@@ -40,6 +40,6 @@ public class App
 
 		var fileSize = new FileInfo(_appSettings.FilePath).Length;
 		if (_appSettings.ChunkSize > fileSize)
-			throw new ArgumentOutOfRangeException($"File {fileSize/1024}kb, Chunk: {_appSettings.ChunkSize/1024}kb");
+			throw new ArgumentException($"File {fileSize/1024}kb, Chunk: {_appSettings.ChunkSize/1024}kb");
 	}
 }

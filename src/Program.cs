@@ -37,11 +37,14 @@ try
 
 	Console.WriteLine($"Elapsed: {timer.ElapsedMilliseconds}ms");
 }
+catch (ArgumentException ae)
+{
+	Console.WriteLine(ae.Message);
+}
 catch (Exception e)
 {
 	Console.WriteLine(e.Message);
 	Console.WriteLine(e.StackTrace);
-	Console.ReadLine();
 }
 
 
@@ -53,5 +56,4 @@ static void CurrentDomainOnUnhandledException(
 
 	Console.WriteLine(exceptionObject.Message);
 	Console.WriteLine(exceptionObject.StackTrace);
-	Console.ReadLine();
 }
